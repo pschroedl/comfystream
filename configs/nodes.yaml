@@ -1,0 +1,72 @@
+nodes:
+  # Core TensorRT nodes
+  comfyui-tensorrt:
+    name: "ComfyUI TensorRT"
+    url: "https://github.com/yondonfu/ComfyUI-TensorRT.git"
+    type: "tensorrt"
+
+  comfyui-depthanything-tensorrt:
+    name: "ComfyUI DepthAnything TensorRT"
+    url: "https://github.com/yondonfu/ComfyUI-DepthAnything-TensorRT.git"
+    type: "tensorrt"
+
+  # Additional nodes
+  comfyui-depth-anything:
+    name: "ComfyUI Depth Anything Tensorrt"
+    url: "https://github.com/yuvraj108c/ComfyUI-Depth-Anything-Tensorrt.git"
+    type: "depth"
+
+  # Ryan's nodes
+  comfyui-ryanontheinside:
+    name: "ComfyUI RyanOnTheInside"
+    url: "https://github.com/pschroedl/ComfyUI_RyanOnTheInside.git"
+    type: "utility"
+    branch: "c5592719d5188cb6bba81287a8af123637eadf79"
+
+  comfyui-misc-effects:
+    name: "ComfyUI Misc Effects"
+    url: "https://github.com/ryanontheinside/ComfyUI-Misc-Effects.git"
+    type: "effects"
+    branch: "c6b360c78611134c3723388170475eb4898ff6b7"
+
+  comfyui-realtimenode:
+    name: "ComfyUI RealTimeNodes"
+    url: "https://github.com/ryanontheinside/ComfyUI_RealTimeNodes.git"
+    type: "realtime"
+    dependencies:
+      - "opencv-python"
+
+  # Other nodes
+  comfyui-sam2-realtime:
+    name: "ComfyUI SAM2 Realtime"
+    url: "https://github.com/pschroedl/ComfyUI-SAM2-Realtime.git"
+    type: "sam"
+    branch: "4f587443fb2808c4b5b303afcd7ec3ec3e0fbd08"
+
+  comfyui-florence2-vision:
+    name: "ComfyUI Florence2 Vision"
+    url: "https://github.com/ad-astra-video/ComfyUI-Florence2-Vision.git"
+    type: "vision"
+    branch: "0c624e61b6606801751bd41d93a09abe9844bea7"
+
+  comfyui-streamdiffusion:
+    name: "ComfyUI StreamDiffusion"
+    url: "https://github.com/pschroedl/ComfyUI-StreamDiffusion.git"
+    type: "diffusion"
+    branch: "f93b98aa9f20ab46c23d149ad208d497cd496579"
+
+  comfyui-liveportraitkj:
+    name: "ComfyUI LivePortraitKJ"
+    url: "https://github.com/kijai/ComfyUI-LivePortraitKJ.git"
+    type: "portrait"
+    branch: "4d9dc6205b793ffd0fb319816136d9b8c0dbfdff"
+
+  comfyui-load-image-url:
+    name: "ComfyUI Load Image from URL"
+    url: "https://github.com/tsogzark/ComfyUI-load-image-from-url.git"
+    type: "utility"
+
+  comfyui-torch-compile:
+    name: "ComfyUI Torch Compile"
+    url: "https://github.com/ltdrdata/ComfyUI-Torch-Compile.git"
+    type: "optimization" 

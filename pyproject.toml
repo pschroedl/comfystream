@@ -1,0 +1,70 @@
+[project]
+name = "comfystream"
+version = "0.1.0"
+description = "ComfyUI streaming server"
+requires-python = ">=3.10"
+dependencies = [
+    "asyncio",
+    # Core ComfyUI and OpenTelemetry dependencies
+    "comfyui @ git+https://github.com/hiddenswitch/ComfyUI.git@89d07f3adf32a6703181343bc732bd85104bb653",
+    "opentelemetry-distro==0.48b0",
+    "opentelemetry-exporter-otlp==1.27.0",
+    "opentelemetry-propagator-jaeger==1.27.0",
+    "opentelemetry-instrumentation==0.48b0",
+    "opentelemetry-util-http==0.48b0",
+    "opentelemetry-instrumentation-aio-pika==0.48b0",
+    "opentelemetry-instrumentation-requests==0.48b0",
+    "opentelemetry-semantic-conventions==0.48b0",
+    # WebRTC and HTTP dependencies
+    "aiortc",
+    "aiohttp",
+    "twilio",
+    # Core ML dependencies
+    "torch==2.5.1",
+    "torchvision",
+    "torchaudio",
+    "tqdm",
+    "nvidia-ml-py==12.560.30",
+    "diffusers==0.30.1",
+    # TensorRT dependencies
+    "nvidia-pyindex",
+    "tensorrt==10.6.0",
+    "onnx",
+    "onnxruntime-gpu",
+    # Additional dependencies for custom nodes
+    "opencv-python",  # Required by ComfyUI_RealTimeNodes
+    "torch-compile",  # Required for TorchCompile nodes
+    "requests",      # Required for downloading models
+    "tqdm",         # Required for download progress bars
+    "pyyaml",       # Required for model config parsing
+]
+
+[project.optional-dependencies]
+custom-nodes = [
+    # Core TensorRT nodes - installed via pip but also cloned in setup_nodes.py
+    "comfy-tensorrt @ git+https://github.com/yondonfu/ComfyUI-TensorRT.git",
+    "comfy-depthanything @ git+https://github.com/yondonfu/ComfyUI-DepthAnything-TensorRT.git",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/yondonfu/comfystream"
+Repository = "https://github.com/yondonfu/comfystream.git"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+comfystream = ["custom_nodes/**/*"]
+
+[tool.setuptools.data-files]
+"comfyui/custom_nodes" = ["nodes/tensor_utils/*"]
+
+[project.scripts]
+setup-comfyui-nodes = "scripts.setup_nodes:main" 
