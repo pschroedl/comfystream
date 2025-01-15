@@ -97,6 +97,25 @@ class TestDepthAnythingInstallation(unittest.TestCase):
         except json.JSONDecodeError:
             self.fail("Workflow file is not valid JSON")
 
+    def test_torch_compile_available(self):
+        """Test if torch.compile is available"""
+        import torch
+        try:
+            # Just check if the compile attribute exists
+            self.assertTrue(hasattr(torch, 'compile'), "torch.compile not available")
+            
+            # Optional: Test if it actually works with a simple model
+            class SimpleModel(torch.nn.Module):
+                def forward(self, x):
+                    return x + 1
+            
+            model = SimpleModel()
+            compiled_model = torch.compile(model)
+            self.assertIsNotNone(compiled_model, "Failed to compile simple model")
+            
+        except Exception as e:
+            self.fail(f"torch.compile test failed: {str(e)}")
+
     def _check_requirements_installed(self, requirements_file):
         """Helper method to check if requirements from a file are installed"""
         import pkg_resources

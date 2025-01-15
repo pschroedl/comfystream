@@ -33,7 +33,6 @@ dependencies = [
     "onnxruntime-gpu",
     # Additional dependencies for custom nodes
     "opencv-python",  # Required by ComfyUI_RealTimeNodes
-    "torch-compile",  # Required for TorchCompile nodes
     "requests",      # Required for downloading models
     "tqdm",         # Required for download progress bars
     "pyyaml",       # Required for model config parsing
@@ -61,10 +60,13 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-comfystream = ["custom_nodes/**/*"]
+comfystream = [
+    "custom_nodes/**/*",
+    "../configs/*.yaml"
+]
 
 [tool.setuptools.data-files]
 "comfyui/custom_nodes" = ["nodes/tensor_utils/*"]
 
 [project.scripts]
-setup-comfyui-nodes = "scripts.setup_nodes:main" 
+setup-comfyui-nodes = "comfystream.scripts.setup_nodes:main" 
