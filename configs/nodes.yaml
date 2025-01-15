@@ -2,19 +2,15 @@ nodes:
   # Core TensorRT nodes
   comfyui-tensorrt:
     name: "ComfyUI TensorRT"
-    url: "https://github.com/yondonfu/ComfyUI-TensorRT.git"
+    url: "https://github.com/yondonfu/ComfyUI_TensorRT"
     type: "tensorrt"
 
   comfyui-depthanything-tensorrt:
     name: "ComfyUI DepthAnything TensorRT"
-    url: "https://github.com/yondonfu/ComfyUI-DepthAnything-TensorRT.git"
+    url: "https://github.com/yuvraj108c/ComfyUI-Depth-Anything-Tensorrt"
     type: "tensorrt"
 
-  # Additional nodes
-  comfyui-depth-anything:
-    name: "ComfyUI Depth Anything Tensorrt"
-    url: "https://github.com/yuvraj108c/ComfyUI-Depth-Anything-Tensorrt.git"
-    type: "depth"
+
 
   # Ryan's nodes
   comfyui-ryanontheinside:
@@ -68,5 +64,5 @@ nodes:
 
   comfyui-torch-compile:
     name: "ComfyUI Torch Compile"
-    url: "https://github.com/ltdrdata/ComfyUI-Torch-Compile.git"
+    url: "https://github.com/yondonfu/ComfyUI-Torch-Compile"
     type: "optimization" 

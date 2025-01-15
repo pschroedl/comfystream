@@ -41,8 +41,8 @@ dependencies = [
 [project.optional-dependencies]
 custom-nodes = [
     # Core TensorRT nodes - installed via pip but also cloned in setup_nodes.py
-    "comfy-tensorrt @ git+https://github.com/yondonfu/ComfyUI-TensorRT.git",
-    "comfy-depthanything @ git+https://github.com/yondonfu/ComfyUI-DepthAnything-TensorRT.git",
+    "comfy-tensorrt @ git+https://github.com/YondonFu/comfyui-tensorrt.git",
+    "comfy-depthanything @ git+https://github.com/YondonFu/comfyui-depthanything-tensorrt.git",
 ]
 
 [build-system]
