@@ -2,6 +2,7 @@ import unittest
 from pathlib import Path
 import yaml
 import os
+import pkg_resources
 
 class TestDepthAnythingInstallation(unittest.TestCase):
     def setUp(self):

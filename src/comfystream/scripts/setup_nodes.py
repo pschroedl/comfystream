@@ -8,15 +8,33 @@ import requests
 from tqdm import tqdm
 import yaml
 import pkg_resources
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Setup ComfyUI nodes and models')
+    parser.add_argument('--workspace', 
+                       default=os.environ.get('COMFY_UI_WORKSPACE', os.path.expanduser('~/comfyui')),
+                       help='ComfyUI workspace directory (default: ~/comfyui or $COMFY_UI_WORKSPACE)')
+    return parser.parse_args()
 
 def get_config_path(filename):
     """Get the absolute path to a config file"""
-    return Path(pkg_resources.resource_filename('comfystream', f'../configs/{filename}'))
+    # First try the local configs directory
+    local_path = Path("configs") / filename
+    if local_path.exists():
+        return local_path
+        
+    # Then try the installed configs directory
+    installed_path = Path(sys.prefix) / "configs" / filename
+    if installed_path.exists():
+        return installed_path
+        
+    raise FileNotFoundError(f"Config file {filename} not found in either {local_path} or {installed_path}")
 
-def setup_environment():
-    os.environ["COMFY_UI_WORKSPACE"] = "/comfyui"
-    os.environ["PYTHONPATH"] = "/comfyui"
-    os.environ["CUSTOM_NODES_PATH"] = "/comfyui/custom_nodes"
+def setup_environment(workspace_dir):
+    os.environ["COMFY_UI_WORKSPACE"] = str(workspace_dir)
+    os.environ["PYTHONPATH"] = str(workspace_dir)
+    os.environ["CUSTOM_NODES_PATH"] = str(workspace_dir / "custom_nodes")
 
 def download_file(url, destination, description=None):
     """Download a file with progress bar"""
@@ -40,7 +58,7 @@ def load_model_config(config_path):
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 
-def setup_model_files(config_path=None):
+def setup_model_files(workspace_dir, config_path=None):
     """Download and setup required model files based on configuration"""
     if config_path is None:
         config_path = get_config_path('models.yaml')
@@ -53,8 +71,8 @@ def setup_model_files(config_path=None):
         print(f"Error parsing model config file: {e}")
         return
 
-    models_path = Path("/comfyui/models")
-    base_path = Path("/comfyui")
+    models_path = workspace_dir / "models"
+    base_path = workspace_dir
 
     for model_id, model_info in config['models'].items():
         # Determine the full path based on whether it's in custom_nodes or models
@@ -83,10 +101,15 @@ def setup_model_files(config_path=None):
                             f"Downloading {os.path.basename(extra['path'])}"
                         )
 
-def setup_directories():
+def setup_directories(workspace_dir):
+    """Create required directories in the workspace"""
     # Create base directories
-    Path("/comfyui/custom_nodes").mkdir(parents=True, exist_ok=True)
-    Path("/comfyui/models").mkdir(parents=True, exist_ok=True)
+    workspace_dir.mkdir(parents=True, exist_ok=True)
+    custom_nodes_dir = workspace_dir / "custom_nodes"
+    models_dir = workspace_dir / "models"
+    
+    custom_nodes_dir.mkdir(parents=True, exist_ok=True)
+    models_dir.mkdir(parents=True, exist_ok=True)
     
     # Create model subdirectories
     model_dirs = [
@@ -97,16 +120,15 @@ def setup_directories():
         "unet",
     ]
     for dir_name in model_dirs:
-        Path(f"/comfyui/models/{dir_name}").mkdir(parents=True, exist_ok=True)
+        (models_dir / dir_name).mkdir(parents=True, exist_ok=True)
     
     # Create symlink for models if /models/ComfyUI--models exists
-    models_path = Path("/models/ComfyUI--models")
-    if models_path.exists():
-        target = Path("/comfyui/models")
-        if not target.exists():
-            target.symlink_to(models_path)
+    models_source = Path("/models/ComfyUI--models")
+    if models_source.exists():
+        if not models_dir.exists():
+            models_dir.symlink_to(models_source)
 
-def install_custom_nodes(config_path=None):
+def install_custom_nodes(workspace_dir, config_path=None):
     """Install custom nodes based on configuration"""
     if config_path is None:
         config_path = get_config_path('nodes.yaml')
@@ -119,7 +141,7 @@ def install_custom_nodes(config_path=None):
         print(f"Error parsing nodes config file: {e}")
         return
 
-    custom_nodes_path = Path("/comfyui/custom_nodes")
+    custom_nodes_path = workspace_dir / "custom_nodes"
     custom_nodes_path.mkdir(parents=True, exist_ok=True)
     os.chdir(custom_nodes_path)
     
@@ -155,10 +177,13 @@ def install_custom_nodes(config_path=None):
             print(f"{node_info['name']} already installed")
 
 def main():
-    setup_environment()
-    setup_directories()
-    install_custom_nodes()
-    setup_model_files()
+    args = parse_args()
+    workspace_dir = Path(args.workspace)
+    
+    setup_environment(workspace_dir)
+    setup_directories(workspace_dir)
+    install_custom_nodes(workspace_dir)
+    setup_model_files(workspace_dir)
 
 if __name__ == "__main__":
     main() 

@@ -61,12 +61,12 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 comfystream = [
-    "custom_nodes/**/*",
-    "../configs/*.yaml"
+    "custom_nodes/**/*"
 ]
 
 [tool.setuptools.data-files]
 "comfyui/custom_nodes" = ["nodes/tensor_utils/*"]
+"configs" = ["configs/*.yaml"]
 
 [project.scripts]
 setup-comfyui-nodes = "comfystream.scripts.setup_nodes:main" 
