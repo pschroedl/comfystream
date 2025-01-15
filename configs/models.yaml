@@ -16,12 +16,7 @@ models:
       - url: "https://huggingface.co/aaronb/dreamshaper-8-dmd-1kstep/raw/main/config.json"
         path: "unet/dreamshaper-8-dmd-1kstep.json"
 
-  # ONNX models
-  depth-anything-onnx:
-    name: "Depth Anything ONNX"
-    url: "https://huggingface.co/yuvraj108c/Depth-Anything-2-Onnx/resolve/main/depth_anything_vitb14_depth_anything_v2_vits.onnx"
-    path: "custom_nodes/ComfyUI-Depth-Anything-Tensorrt/depth_anything_vitb14_depth_anything_v2_vits.onnx"
-    type: "onnx"
+
 
   # ControlNet models
   controlnet-depth:
