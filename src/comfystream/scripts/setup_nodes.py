@@ -9,6 +9,7 @@ from tqdm import tqdm
 import yaml
 import pkg_resources
 import argparse
+from .utils import get_config_path, load_model_config
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Setup ComfyUI nodes and models')
@@ -16,20 +17,6 @@ def parse_args():
                        default=os.environ.get('COMFY_UI_WORKSPACE', os.path.expanduser('~/comfyui')),
                        help='ComfyUI workspace directory (default: ~/comfyui or $COMFY_UI_WORKSPACE)')
     return parser.parse_args()
-
-def get_config_path(filename):
-    """Get the absolute path to a config file"""
-    config_path = Path("configs") / filename
-    if not config_path.exists():
-        print(f"Warning: Config file {filename} not found at {config_path}")
-        print(f"Available files in configs/:")
-        try:
-            for f in Path("configs").glob("*"):
-                print(f"  - {f.name}")
-        except FileNotFoundError:
-            print("  configs/ directory not found")
-        raise FileNotFoundError(f"Config file {filename} not found at {config_path}")
-    return config_path
 
 def setup_environment(workspace_dir):
     os.environ["COMFY_UI_WORKSPACE"] = str(workspace_dir)

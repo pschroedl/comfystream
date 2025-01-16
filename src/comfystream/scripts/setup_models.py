@@ -6,6 +6,7 @@ import requests
 from tqdm import tqdm
 import yaml
 import argparse
+from .utils import get_config_path, load_model_config
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Setup ComfyUI models')
@@ -13,20 +14,6 @@ def parse_args():
                        default=os.environ.get('COMFY_UI_WORKSPACE', os.path.expanduser('~/comfyui')),
                        help='ComfyUI workspace directory (default: ~/comfyui or $COMFY_UI_WORKSPACE)')
     return parser.parse_args()
-
-def get_config_path(filename):
-    """Get the absolute path to a config file"""
-    config_path = Path("configs") / filename
-    if not config_path.exists():
-        print(f"Warning: Config file {filename} not found at {config_path}")
-        print(f"Available files in configs/:")
-        try:
-            for f in Path("configs").glob("*"):
-                print(f"  - {f.name}")
-        except FileNotFoundError:
-            print("  configs/ directory not found")
-        raise FileNotFoundError(f"Config file {filename} not found at {config_path}")
-    return config_path
 
 def download_file(url, destination, description=None):
     """Download a file with progress bar"""
@@ -44,11 +31,6 @@ def download_file(url, destination, description=None):
             size = file.write(data)
             progress_bar.update(size)
     progress_bar.close()
-
-def load_model_config(config_path):
-    """Load model configuration from YAML file"""
-    with open(config_path, 'r') as f:
-        return yaml.safe_load(f)
 
 def setup_model_files(workspace_dir, config_path=None):
     """Download and setup required model files based on configuration"""
