@@ -69,4 +69,5 @@ comfystream = [
 "share/comfystream/configs" = ["configs/*.yaml"]
 
 [project.scripts]
-setup-comfyui-nodes = "comfystream.scripts.setup_nodes:main" 
+setup-comfyui-nodes = "comfystream.scripts.setup_nodes:main"
+setup-comfyui-models = "comfystream.scripts.setup_models:main" 
