@@ -1,179 +1,119 @@
-# ComfyStream Configuration Guide
+# ComfyStream Setup Scripts
 
-This guide explains how to customize ComfyStream's installation and components using configuration files.
+This directory contains scripts for setting up ComfyUI nodes and models. The setup is split into two main scripts:
 
-## Configuration Files Overview
+## Setup Scripts
 
+1. **setup-comfyui-nodes**: Installs custom ComfyUI nodes
+2. **setup-comfyui-models**: Downloads model files and weights
+
+## Configuration Files
+
+- `configs/nodes.yaml`: Defines custom nodes to install
+- `configs/models.yaml`: Defines model files to download
 - `pyproject.toml`: Package dependencies and build settings
-- `configs/models.yaml`: Model weights and checkpoints configuration
-- `configs/nodes.yaml`: Custom ComfyUI nodes configuration
 
-## Directory Structure
+## Basic Usage
 
+```bash
+# Install both nodes and models (default workspace: ~/comfyui)
+setup-comfyui-nodes
+setup-comfyui-models
+
+# Use custom workspace
+setup-comfyui-nodes --workspace /path/to/workspace
+setup-comfyui-models --workspace /path/to/workspace
+
+# Using environment variable
+export COMFY_UI_WORKSPACE=/path/to/workspace
+setup-comfyui-nodes
+setup-comfyui-models
 ```
-comfystream/
-├── configs/
-│   ├── models.yaml    # Model definitions
-│   └── nodes.yaml     # Custom node definitions
-├── pyproject.toml     # Package configuration
-└── scripts/
-    └── setup_nodes.py # Installation script
-```
 
-## Configuration Details
+## Configuration Examples
 
-### 1. Custom Nodes (nodes.yaml)
-
-Configure which ComfyUI nodes to install:
-
+### Custom Nodes (nodes.yaml)
 ```yaml
 nodes:
-  # Core TensorRT nodes
   comfyui-tensorrt:
     name: "ComfyUI TensorRT"
     url: "https://github.com/yondonfu/ComfyUI_TensorRT"
     type: "tensorrt"
-
-  # Add custom nodes with optional dependencies
-  comfyui-realtimenode:
-    name: "ComfyUI RealTimeNodes"
-    url: "https://github.com/ryanontheinside/ComfyUI_RealTimeNodes.git"
-    type: "realtime"
     dependencies:
-      - "opencv-python"
+      - "tensorrt"
 ```
 
-Available fields:
-- `name`: Human-readable name
-- `url`: Git repository URL
-- `type`: Node category/type
-- `dependencies`: Additional Python packages needed (optional)
-- `branch`: Specific git branch or commit (optional)
-
-### 2. Models (models.yaml)
-
-Define model weights to download:
-
+### Models (models.yaml)
 ```yaml
 models:
-  # Base models
   dreamshaper-v8:
     name: "Dreamshaper v8"
     url: "https://civitai.com/api/download/models/128713"
     path: "checkpoints/SD1.5/dreamshaper-8.safetensors"
     type: "checkpoint"
-
-  # Models with additional files
-  dreamshaper-dmd:
-    name: "Dreamshaper DMD"
-    url: "https://huggingface.co/aaronb/dreamshaper-8-dmd-1kstep/resolve/main/diffusion_pytorch_model.safetensors"
-    path: "unet/dreamshaper-8-dmd-1kstep.safetensors"
-    type: "unet"
-    extra_files:
-      - url: "https://huggingface.co/aaronb/dreamshaper-8-dmd-1kstep/raw/main/config.json"
-        path: "unet/dreamshaper-8-dmd-1kstep.json"
 ```
 
-Available fields:
-- `name`: Human-readable name
-- `url`: Download URL
-- `path`: Installation path (relative to workspace)
-- `type`: Model type
-- `extra_files`: Additional files to download (optional)
+## Directory Structure
 
-### 3. Package Dependencies (pyproject.toml)
-
-Add required Python packages:
-
-```toml
-[project.dependencies]
-# Core dependencies
-torch = "==2.5.1"
-tensorrt = "==10.6.0"
-opencv-python = "*"
-
-[project.optional-dependencies]
-custom-nodes = [
-    # Pip-installable custom nodes
-    "comfy-tensorrt @ git+https://github.com/yondonfu/ComfyUI_TensorRT.git",
-]
+```
+workspace/
+├── custom_nodes/          # Custom nodes installed by setup-comfyui-nodes
+└── models/               # Models downloaded by setup-comfyui-models
+    ├── checkpoints/     
+    ├── controlnet/      
+    ├── unet/           
+    ├── vae/            
+    └── tensorrt/        
 ```
 
-## Usage
+## Script Details
 
-### Installation
+### setup-comfyui-nodes
+- Clones node repositories from GitHub
+- Installs node dependencies
+- Creates custom_nodes directory
+- Sets up environment variables
 
-```bash
-# Install the package with configs
-pip install -e .
+### setup-comfyui-models
+- Downloads model weights
+- Downloads additional files (configs, etc)
+- Creates model directory structure
+- Handles file verification
 
-# Default installation (~/comfyui)
-setup-comfyui-nodes
+## Environment Variables
 
-# Custom workspace
-setup-comfyui-nodes --workspace /path/to/workspace
+- `COMFY_UI_WORKSPACE`: Base directory for installation
+- `PYTHONPATH`: Set to workspace directory
+- `CUSTOM_NODES_PATH`: Custom nodes directory
 
-# Using environment variable
-export COMFY_UI_WORKSPACE=/path/to/workspace
-setup-comfyui-nodes
-```
+## Notes
 
-### Adding New Components
+- Run both scripts to set up a complete environment
+- Scripts can be run independently
+- Both scripts use the same workspace configuration
+- Models are only downloaded if they don't exist
+- Node repositories are only cloned if not present
+- Dependencies are installed automatically
 
-1. **New Custom Node**:
-   ```yaml
-   # In configs/nodes.yaml
-   nodes:
-     my-custom-node:
-       name: "My Custom Node"
-       url: "https://github.com/user/my-custom-node"
-       type: "custom"
-       dependencies:
-         - "required-package"
-   ```
+## Troubleshooting
 
-2. **New Model**:
-   ```yaml
-   # In configs/models.yaml
-   models:
-     my-model:
-       name: "My Model"
-       url: "https://example.com/model.safetensors"
-       path: "checkpoints/my-model.safetensors"
-       type: "checkpoint"
-   ```
+If you encounter issues:
 
-3. **New Dependency**:
-   ```toml
-   # In pyproject.toml
-   [project.dependencies]
-   new-package = ">=1.0.0"
-   ```
+1. Check if workspace directory is writable
+2. Verify config files exist in configs/
+3. Ensure Git is installed for node setup
+4. Check network connection for downloads
+5. Verify Python environment has required packages
 
-### Testing
+## Testing
 
-Verify your configuration:
+Run the installation tests:
 ```bash
 python -m unittest tests/test_installation.py
 ```
 
-## Workspace Structure
-
-```
-workspace/
-├── custom_nodes/          # Installed custom nodes
-└── models/
-    ├── checkpoints/      # Model checkpoints
-    ├── controlnet/       # ControlNet models
-    ├── unet/            # UNet models
-    ├── vae/             # VAE models
-    └── tensorrt/        # TensorRT engines
-```
-
-## Notes
-
-- All paths in `models.yaml` are relative to the workspace directory
-- Custom nodes are installed from Git repositories
-- Dependencies listed in `nodes.yaml` are installed automatically
-- The script creates all necessary directories
-- Models are downloaded only if they don't exist 
+This will verify:
+- Directory structure
+- Node installation
+- Model downloads
+- Environment setup
