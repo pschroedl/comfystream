@@ -104,6 +104,9 @@ custom-nodes = [
 ### Installation
 
 ```bash
+# Install the package with configs
+pip install -e .
+
 # Default installation (~/comfyui)
 setup-comfyui-nodes
 

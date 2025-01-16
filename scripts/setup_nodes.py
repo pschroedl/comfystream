@@ -38,12 +38,13 @@ def load_model_config(config_path):
 def setup_model_files(config_path="configs/models.yaml"):
     """Download and setup required model files based on configuration"""
     try:
+        print("hello, I am loading: " + config_path)
         config = load_model_config(config_path)
     except FileNotFoundError:
-        print(f"Error: Model config file not found at {config_path}")
+        print("Error: Model config file not found at {config_path}")
         return
     except yaml.YAMLError as e:
-        print(f"Error parsing model config file: {e}")
+        print("Error parsing model config file: {e}")
         return
 
     models_path = Path("/comfyui/models")
