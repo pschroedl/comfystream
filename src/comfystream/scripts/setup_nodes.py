@@ -9,7 +9,10 @@ from tqdm import tqdm
 import yaml
 import pkg_resources
 import argparse
-from .utils import get_config_path, load_model_config
+
+# Change relative import to absolute import
+from utils import get_config_path, load_model_config
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Setup ComfyUI nodes and models')
