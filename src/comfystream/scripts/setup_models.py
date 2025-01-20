@@ -6,7 +6,7 @@ import requests
 from tqdm import tqdm
 import yaml
 import argparse
-from .utils import get_config_path, load_model_config
+from utils import get_config_path, load_model_config
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Setup ComfyUI models')
