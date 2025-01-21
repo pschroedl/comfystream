@@ -37,6 +37,16 @@ WORKDIR /workspace
 # - /workspace/ComfyUI/models
 # - /workspace/comfyRealtime
 
+# (4) Clone the ComfyStream Setup Scripts and run initial_setup.sh
+RUN git clone https://github.com/ryanontheinside/ComfyStream_Setup_Scripts \
+    && chmod +x ./ComfyStream_Setup_Scripts/runpod/initial_setup.sh \
+    # This script installs Miniconda, clones ComfyUI and ComfyStream,
+    # creates conda environments, etc.
+    && bash ./ComfyStream_Setup_Scripts/runpod/initial_setup.sh
+
+# (5) Return to /app if that's where your code eventually lives
+WORKDIR /app
+
 COPY . /app
 WORKDIR /app
 
