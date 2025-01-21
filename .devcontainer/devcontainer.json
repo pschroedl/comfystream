@@ -14,23 +14,33 @@
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
-			"settings": {},
+			"settings": {
+				"python.defaultInterpreterPath": "/workspace/miniconda3/envs/comfystream/bin/python"
+			},
 			"extensions": [
 				"ms-python.python",
-				"ms-python.black-formatter"
+				"ms-python.black-formatter",
+				"ms-python.vscode-pylance"
 			]
 		}
 	},
-	"appPort": ["8188:8188","8889:8889"],
-	"forwardPorts": [8188, 8889],
+	// Expose both ComfyUI and ComfyStream ports
+	"appPort": [
+		"8188:8188",  // ComfyUI
+		"8889:8889",  // ComfyStream
+		"3000:3000"   // ComfyStream UI (optional)
+	],
+	"forwardPorts": [8188, 8889, 3000],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// Use 'mounts' to make a list of local folders available inside the container.
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
 	"mounts": [
-		//Set the mounts accordingly
-		"source=/workspace3/comfyRealtime,target=/workspace/comfyRealtime,type=bind",
-		"source=/workspace3/miniconda3,target=/workspace/miniconda3,type=bind"
-		// "source=${localWorkspaceFolder}/miniconda3,target=/workspace/miniconda3,type=bind",
-	]
+		// Persistent storage for models and environments
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.comfystream/models,target=/workspace/ComfyUI/models,type=bind,consistency=cached",
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.comfystream/miniconda3,target=/workspace/miniconda3,type=bind,consistency=cached",
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.comfystream/comfyRealtime,target=/workspace/comfyRealtime,type=bind,consistency=cached"
+	],
+	// Run post-create commands
+	"postCreateCommand": "bash .devcontainer/post-create.sh"
 }
