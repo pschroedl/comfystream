@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     socat \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir workspace \
+RUN mkdir -p /workspace \
     && cd /workspace \
     && git clone https://github.com/ryanontheinside/ComfyStream_Setup_Scripts \
     && cp ./ComfyStream_Setup_Scripts/runpod/new_server_setup.sh new_server_setup.sh \
