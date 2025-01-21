@@ -13,12 +13,12 @@ if [ ! -d "/workspace/ComfyUI" ]; then
   bash ./ComfyStream_Setup_Scripts/runpod/initial_setup.sh
 
   # Optionally store Twilio creds if you didn't pass them in via environment
-  sed -i "1i\\
-  export TWILIO_ACCOUNT_SID=\"${TWILIO_ACCOUNT_SID}\"\n\
-  export TWILIO_AUTH_TOKEN=\"${TWILIO_AUTH_TOKEN}\"\n" new_server_setup.sh
+#   sed -i "1i\\
+#   export TWILIO_ACCOUNT_SID=\"${TWILIO_ACCOUNT_SID}\"\n\
+#   export TWILIO_AUTH_TOKEN=\"${TWILIO_AUTH_TOKEN}\"\n" new_server_setup.sh
 
-  # This script starts both ComfyUI and ComfyStream envs
-  bash ./new_server_setup.sh
+#   # This script starts both ComfyUI and ComfyStream envs
+#   bash ./new_server_setup.sh
 
   #############################################
   # >> INSERT CUSTOM NODE INSTALLATION HERE <<
@@ -111,11 +111,11 @@ else
   cd /workspace
 
   # Optionally re-inject Twilio credentials if needed
-  sed -i "1i\\
-  export TWILIO_ACCOUNT_SID=\"${TWILIO_ACCOUNT_SID}\"\n\
-  export TWILIO_AUTH_TOKEN=\"${TWILIO_AUTH_TOKEN}\"\n" new_server_setup.sh
+#   sed -i "1i\\
+#   export TWILIO_ACCOUNT_SID=\"${TWILIO_ACCOUNT_SID}\"\n\
+#   export TWILIO_AUTH_TOKEN=\"${TWILIO_AUTH_TOKEN}\"\n" new_server_setup.sh
 
-  bash ./new_server_setup.sh
+#   bash ./new_server_setup.sh
 fi
 
 echo "Setup complete. Tailing to keep container running..."
