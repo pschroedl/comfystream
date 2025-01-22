@@ -91,3 +91,19 @@ RUN echo 'fi' >> ~/.bashrc
 
 # Activate the comfystream environment and install dependencies 
 RUN bash -c "source activate comfystream && python /install.py --workspace /ComfyUI"
+
+
+# Download models
+WORKDIR /ComfyUI
+RUN /miniconda3/envs/comfyui/bin/huggingface-cli download Livepeer-Studio/comfystream_checkpoints --local-dir models/checkpoints --include "*.safetensors"
+RUN /miniconda3/envs/comfyui/bin/huggingface-cli download Livepeer-Studio/comfystream_loras --local-dir models/checkpoints --include "*.safetensors"
+RUN /miniconda3/envs/comfyui/bin/huggingface-cli download madebyollin/taesd --local-dir models/vae --include "taesd_decoder.safetensors" --include "taesd_encoder.safetensors" 
+RUN /miniconda3/envs/comfyui/bin/huggingface-cli download comfyanonymous/ControlNet-v1-1_fp16_safetensors --local-dir models/controlnet --include "control_v11f1p_sd15_depth_fp16.safetensors" --include "control_v11p_sd15_openpose_fp16.safetensors"
+
+# Download Dreamshaper 8 DMD
+RUN /miniconda3/envs/comfyui/bin/huggingface-cli download aaronb/dreamshaper-8-dmd-1kstep --local-dir models/unet --include "diffusion_pytorch_model.safetensors"
+RUN mv /ComfyUI/models/unet/diffusion_pytorch_model.safetensors /ComfyUI/models/unet/dreamshaper_8_dmd_1kstep.safetensors
+
+# Download Depth-Anything model
+RUN /miniconda3/envs/comfyui/bin/huggingface-cli download yuvraj108c/Depth-Anything-2-Onnx --local-dir models/unet --include "depth_anything_v2_vitb.onnx"
+RUN mkdir -p /ComfyUI/models/tensorrt/depth-anything/
