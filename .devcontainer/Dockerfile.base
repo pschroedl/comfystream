@@ -82,16 +82,8 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git /ComfyUI && \
 
 RUN conda create -n comfystream --clone comfyui
 
-# Set comfystream as the default environment
-RUN conda config --set auto_activate_base false
-RUN echo 'if [ -f "/miniconda3/etc/profile.d/conda.sh" ]; then' >> ~/.bashrc
-RUN echo '    . "/miniconda3/etc/profile.d/conda.sh"' >> ~/.bashrc
-RUN echo '    conda activate comfystream' >> ~/.bashrc
-RUN echo 'fi' >> ~/.bashrc
-
 # Activate the comfystream environment and install dependencies 
 RUN bash -c "source activate comfystream && python /install.py --workspace /ComfyUI"
-
 
 # Download models
 WORKDIR /ComfyUI
@@ -105,5 +97,12 @@ RUN /miniconda3/envs/comfyui/bin/huggingface-cli download aaronb/dreamshaper-8-d
 RUN mv /ComfyUI/models/unet/diffusion_pytorch_model.safetensors /ComfyUI/models/unet/dreamshaper_8_dmd_1kstep.safetensors
 
 # Download Depth-Anything model
-RUN /miniconda3/envs/comfyui/bin/huggingface-cli download yuvraj108c/Depth-Anything-2-Onnx --local-dir models/unet --include "depth_anything_v2_vitb.onnx"
+RUN wget -O /ComfyUI/custom_nodes/ComfyUI-Depth-Anything-Tensorrt/depth_anything_vitl14.onnx https://huggingface.co/yuvraj108c/Depth-Anything-2-Onnx/resolve/main/depth_anything_v2_vitb.onnx?download=true --content-disposition
 RUN mkdir -p /ComfyUI/models/tensorrt/depth-anything/
+
+# Set comfystream as the default environment
+RUN conda config --set auto_activate_base false
+RUN echo 'if [ -f "/miniconda3/etc/profile.d/conda.sh" ]; then' >> ~/.bashrc
+RUN echo '    . "/miniconda3/etc/profile.d/conda.sh"' >> ~/.bashrc
+RUN echo '    conda activate comfystream' >> ~/.bashrc
+RUN echo 'fi' >> ~/.bashrc

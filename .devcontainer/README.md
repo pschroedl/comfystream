@@ -55,3 +55,24 @@ Replace `/path/to/your/models` with the actual path to your models on the host m
 - [Docker Documentation](https://docs.docker.com/)
 
 By following these steps, you should be able to set up and run your development container for ComfyStream efficiently.
+## Building the DepthAnything Engine
+
+1. Navigate to the DepthAnything directory:
+
+    ```sh
+    cd /ComfyUI/custom_nodes/ComfyUI-Depth-Anything-Tensorrt/
+    ```
+
+2. Run the export script to build the engine:
+
+    ```sh
+    python export_trt.py
+    ```
+
+3. Move the generated engine file to the appropriate directory:
+
+    ```sh
+    mv depth_anything_vitl14-fp16.engine /ComfyUI/models/tensorrt/depth-anything/
+    ```
+
+By following these steps, you will have successfully built and copied the DepthAnything engine to the required location.
