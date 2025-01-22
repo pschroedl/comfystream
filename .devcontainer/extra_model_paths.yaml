@@ -14,4 +14,6 @@ a111:
     embeddings: /extra/models/embeddings
     hypernetworks: /extra/models/hypernetworks
     controlnet: /extra/models/controlnet
-    custom_nodes: /extra/custom-nodes
+
+#  Optional: Map local custom nodes (requires installation)
+#     custom_nodes: /extra/custom-nodes
