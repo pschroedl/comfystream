@@ -20,7 +20,7 @@ COPY . /app
 
 RUN source activate comfyui && git clone https://github.com/comfyanonymous/ComfyUI.git /ComfyUI && \
 cd /ComfyUI && /miniconda3/envs/comfyui/bin/pip install -r requirements.txt
-COPY ./workflows/comfyui* /ComfyUI/user/default/workflows/examples
+COPY ./workflows/ui* /ComfyUI/user/default/workflows/examples
 COPY ./nodes/tensor_utils /ComfyUI/custom_nodes/tensor_utils
 WORKDIR /
 

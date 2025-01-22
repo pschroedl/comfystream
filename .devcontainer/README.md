@@ -73,6 +73,7 @@ By following these steps, you should be able to set up and run your development 
 By following these steps, you will have successfully built and copied the DepthAnything engine to the required location.
 
 3. Start ComfyUI
+
 When building engines, you should start ComfyUI normally. 
 
 ```sh
@@ -83,3 +84,9 @@ When running TensorRT engine enabled workflows, you should use the extra flag as
 ```sh
 python main.py --listen --disable-cuda-malloc
 ```
+
+4. Start ComfyStream
+
+    ```sh
+    python server/app.py --workspace ../ComfyUI --media-ports=5678 --host=0.0.0.0 --port 8889
+    ```
