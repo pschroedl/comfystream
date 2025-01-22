@@ -1,0 +1,84 @@
+FROM runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04
+
+# 1. Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    nano \
+    socat \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Install Miniconda (optional, if you want it ready at build-time)
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh \
+   && bash /tmp/miniconda.sh -b -p /miniconda3 \
+   && rm /tmp/miniconda.sh
+
+ENV PATH="/miniconda3/bin:${PATH}"
+RUN conda create -n comfyui python=3.11 -y
+COPY ./install.py /install.py
+
+WORKDIR /
+
+# Clone ComfyUI Repo to /ComfyUI
+RUN git clone https://github.com/comfyanonymous/ComfyUI.git /ComfyUI && \
+    cd /ComfyUI && /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \ 
+    cd /ComfyUI/custom_nodes && \
+    # Ryan's nodes
+    git clone https://github.com/pschroedl/ComfyUI_RyanOnTheInside.git && \
+    cd ComfyUI_RyanOnTheInside && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    git clone https://github.com/ltdrdata/ComfyUI-Manager.git && \
+    cd ComfyUI-Manager && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    git clone https://github.com/tsogzark/ComfyUI-load-image-from-url.git && \
+    git clone https://github.com/ryanontheinside/ComfyUI-Misc-Effects.git && \
+    git clone https://github.com/ryanontheinside/ComfyUI_RealTimeNodes.git && \
+    cd ComfyUI_RealTimeNodes && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    # Vision and AI nodes
+    git clone https://github.com/ad-astra-video/ComfyUI-Florence2-Vision.git && \
+    cd ComfyUI-Florence2-Vision && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    git clone https://github.com/pschroedl/ComfyUI-SAM2-Realtime.git && \
+    cd ComfyUI-SAM2-Realtime && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    git clone https://github.com/kijai/ComfyUI-LivePortraitKJ.git && \
+    cd ComfyUI-LivePortraitKJ && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    # Utility nodes
+    git clone https://github.com/yondonfu/ComfyUI-Torch-Compile && \
+    cd ComfyUI-Torch-Compile && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    # Core TensorRT nodes
+    git clone -b quantization_with_controlnet_fixes https://github.com/yondonfu/ComfyUI_TensorRT && \
+    cd ComfyUI_TensorRT && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+    cd .. && \
+    git clone https://github.com/yuvraj108c/ComfyUI-Depth-Anything-Tensorrt && \
+    cd ComfyUI-Depth-Anything-Tensorrt && \
+    /miniconda3/envs/comfyui/bin/pip install -r requirements.txt
+
+# Issues with StreamDiffusion in comfystream env, excluding for now
+# cd .. && \
+# git clone https://github.com/pschroedl/ComfyUI-StreamDiffusion.git && \
+# cd ComfyUI-StreamDiffusion && \
+# /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
+
+RUN conda create -n comfystream --clone comfyui
+
+# Set comfystream as the default environment
+RUN conda config --set auto_activate_base false
+RUN echo 'if [ -f "/miniconda3/etc/profile.d/conda.sh" ]; then' >> ~/.bashrc
+RUN echo '    . "/miniconda3/etc/profile.d/conda.sh"' >> ~/.bashrc
+RUN echo '    conda activate comfystream' >> ~/.bashrc
+RUN echo 'fi' >> ~/.bashrc
+
+# Activate the comfystream environment and install dependencies 
+RUN bash -c "source activate comfystream && python /install.py --workspace /ComfyUI"

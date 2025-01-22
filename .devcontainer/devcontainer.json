@@ -2,7 +2,6 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
 	"name": "ComfyStream",
-	// Image to use for the dev container. More info: https://containers.dev/guide/dockerfile.
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
@@ -24,7 +23,6 @@
 			]
 		}
 	},
-	// Expose both ComfyUI and ComfyStream ports
 	"appPort": [
 		"8188:8188",  // ComfyUI
 		"8889:8889",  // ComfyStream
@@ -36,11 +34,9 @@
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
 	"mounts": [
-		// Persistent storage for models and environments
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.comfystream/models,target=/workspace/ComfyUI/models,type=bind,consistency=cached",
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.comfystream/miniconda3,target=/workspace/miniconda3,type=bind,consistency=cached",
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.comfystream/comfyRealtime,target=/workspace/comfyRealtime,type=bind,consistency=cached"
+		// Use 'mounts' to set models and environments for the container, the following targets are included in extra_model_paths.yaml
+		// "source=${localEnv:HOME}/ComfyUI-nodes,target=/ComfyUI/extra/custom_nodes,type=bind,consistency=cached",
+		// "source=${localEnv:HOME}/ComfyUI-models,target=/ComfyUI/extra/models,type=bind,consistency=cached"
 	],
-	// Run post-create commands
 	"postCreateCommand": "bash .devcontainer/post-create.sh"
 }
