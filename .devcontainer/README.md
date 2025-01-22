@@ -63,16 +63,23 @@ By following these steps, you should be able to set up and run your development 
     cd /ComfyUI/custom_nodes/ComfyUI-Depth-Anything-Tensorrt/
     ```
 
-2. Run the export script to build the engine:
+2. Run the export script to build the engine and move the generated engine file to the appropriate directory:
 
     ```sh
     python export_trt.py
-    ```
-
-3. Move the generated engine file to the appropriate directory:
-
-    ```sh
     mv depth_anything_vitl14-fp16.engine /ComfyUI/models/tensorrt/depth-anything/depth_anything_vitl14-fp16.engine
     ```
 
 By following these steps, you will have successfully built and copied the DepthAnything engine to the required location.
+
+3. Start ComfyUI
+When building engines, you should start ComfyUI normally. 
+
+```sh
+python main.py --listen
+```
+
+When running TensorRT engine enabled workflows, you should use the extra flag as shown below:
+```sh
+python main.py --listen --disable-cuda-malloc
+```

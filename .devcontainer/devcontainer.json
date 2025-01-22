@@ -35,7 +35,6 @@
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
 	"mounts": [
 		// Use 'mounts' to set models and environments for the container, the following targets are included in extra_model_paths.yaml
-		// "source=${localEnv:HOME}/ComfyUI-nodes,target=/ComfyUI/extra/custom_nodes,type=bind,consistency=cached",
 		// "source=${localEnv:HOME}/ComfyUI-models,target=/ComfyUI/extra/models,type=bind,consistency=cached"
 	],
 	"postCreateCommand": "bash .devcontainer/post-create.sh"

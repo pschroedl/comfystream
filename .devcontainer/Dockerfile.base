@@ -16,14 +16,16 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -
 ENV PATH="/miniconda3/bin:${PATH}"
 RUN eval "$(/miniconda3/bin/conda shell.bash hook)"
 RUN conda create -n comfyui python=3.11 -y
-COPY ./install.py /install.py
+COPY . /app
 
+RUN source activate comfyui && git clone https://github.com/comfyanonymous/ComfyUI.git /ComfyUI && \
+cd /ComfyUI && /miniconda3/envs/comfyui/bin/pip install -r requirements.txt
+COPY ./workflows/comfyui* /ComfyUI/user/default/workflows/examples
+COPY ./nodes/tensor_utils /ComfyUI/custom_nodes/tensor_utils
 WORKDIR /
 
 # Clone ComfyUI Repo to /ComfyUI
-RUN source activate comfyui && git clone https://github.com/comfyanonymous/ComfyUI.git /ComfyUI && \
-    cd /ComfyUI && /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \ 
-    cd /ComfyUI/custom_nodes && \
+RUN source activate comfyui && cd /ComfyUI/custom_nodes && \
     # Ryan's nodes
     git clone https://github.com/pschroedl/ComfyUI_RyanOnTheInside.git && \
     cd ComfyUI_RyanOnTheInside && \
@@ -71,20 +73,11 @@ RUN source activate comfyui && git clone https://github.com/comfyanonymous/Comfy
     cd ComfyUI-Depth-Anything-Tensorrt && \
     /miniconda3/envs/comfyui/bin/pip install -r requirements.txt
 
-# Issues with StreamDiffusion in comfystream env, excluding for now
-# cd .. && \
-# git clone https://github.com/pschroedl/ComfyUI-StreamDiffusion.git && \
-# cd ComfyUI-StreamDiffusion && \
-# /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
-# git clone https://github.com/kijai/ComfyUI-LivePortraitKJ.git && \
-# cd ComfyUI-LivePortraitKJ && \
-# /miniconda3/envs/comfyui/bin/pip install -r requirements.txt && \
-# cd .. && \
-
 RUN conda create -n comfystream
 
 # Activate the comfystream environment and install dependencies 
-RUN bash -c "source activate comfystream && python /install.py --workspace /ComfyUI"
+RUN bash -c "source activate comfystream && pip install /app && pip install tensorrt-cu12-bindings==10.7.0 tensorrt-cu12-libs==10.7.0 && python /app/install.py --workspace /ComfyUI"
+RUN rm -rf /app
 
 # Download models
 WORKDIR /ComfyUI
