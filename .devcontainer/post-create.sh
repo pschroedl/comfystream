@@ -16,7 +16,7 @@ fi
 
 # Create a symlink to the tensor_utils directory to make it easier to develop comfystream nodes
 if [ ! -d "/ComfyUI/custom_nodes/tensor_utils" ]; then
-    ln -s /workspace/nodes/tensor_utils /ComfyUI/custom_nodes/tensor_utils
+    cp -r /workspace/nodes/tensor_utils /ComfyUI/custom_nodes/tensor_utils
 fi
 
 # Initialize conda if needed

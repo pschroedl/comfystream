@@ -72,7 +72,7 @@ By following these steps, you should be able to set up and run your development 
 3. Move the generated engine file to the appropriate directory:
 
     ```sh
-    mv depth_anything_vitl14-fp16.engine /ComfyUI/models/tensorrt/depth-anything/
+    mv depth_anything_vitl14-fp16.engine /ComfyUI/models/tensorrt/depth-anything/depth_anything_vitl14-fp16.engine
     ```
 
 By following these steps, you will have successfully built and copied the DepthAnything engine to the required location.
