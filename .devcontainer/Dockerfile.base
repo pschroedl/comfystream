@@ -92,7 +92,8 @@ RUN /miniconda3/envs/comfyui/bin/huggingface-cli download Livepeer-Studio/comfys
 RUN /miniconda3/envs/comfyui/bin/huggingface-cli download madebyollin/taesd --local-dir models/vae --include "taesd_decoder.safetensors" --include "taesd_encoder.safetensors" 
 RUN /miniconda3/envs/comfyui/bin/huggingface-cli download comfyanonymous/ControlNet-v1-1_fp16_safetensors --local-dir models/controlnet --include "control_v11f1p_sd15_depth_fp16.safetensors" --include "control_v11p_sd15_openpose_fp16.safetensors"
 
-# Download Dreamshaper 8 DMD
+# Download Dreamshaper 8 Model and DMD
+RUN wget -O models/checkpoints/dreamshaper_8.safetensors https://civitai.com/api/download/models/128713 --content-disposition
 RUN /miniconda3/envs/comfyui/bin/huggingface-cli download aaronb/dreamshaper-8-dmd-1kstep --local-dir models/unet --include "diffusion_pytorch_model.safetensors"
 RUN mv /ComfyUI/models/unet/diffusion_pytorch_model.safetensors /ComfyUI/models/unet/dreamshaper_8_dmd_1kstep.safetensors
 
