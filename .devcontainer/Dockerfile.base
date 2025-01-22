@@ -89,7 +89,8 @@ RUN bash -c "source activate comfystream && python /install.py --workspace /Comf
 WORKDIR /ComfyUI
 RUN /miniconda3/envs/comfyui/bin/huggingface-cli download Livepeer-Studio/comfystream_checkpoints --local-dir models/checkpoints --include "*.safetensors"
 RUN /miniconda3/envs/comfyui/bin/huggingface-cli download Livepeer-Studio/comfystream_loras --local-dir models/checkpoints --include "*.safetensors"
-RUN /miniconda3/envs/comfyui/bin/huggingface-cli download madebyollin/taesd --local-dir models/vae --include "taesd_decoder.safetensors" --include "taesd_encoder.safetensors" 
+
+#Download ControlNet models
 RUN /miniconda3/envs/comfyui/bin/huggingface-cli download comfyanonymous/ControlNet-v1-1_fp16_safetensors --local-dir models/controlnet --include "control_v11f1p_sd15_depth_fp16.safetensors" --include "control_v11p_sd15_openpose_fp16.safetensors"
 
 # Download Dreamshaper 8 Model and DMD
@@ -100,6 +101,10 @@ RUN mv /ComfyUI/models/unet/diffusion_pytorch_model.safetensors /ComfyUI/models/
 # Download Depth-Anything model
 RUN wget -O /ComfyUI/custom_nodes/ComfyUI-Depth-Anything-Tensorrt/depth_anything_vitl14.onnx https://huggingface.co/yuvraj108c/Depth-Anything-2-Onnx/resolve/main/depth_anything_v2_vitb.onnx?download=true --content-disposition
 RUN mkdir -p /ComfyUI/models/tensorrt/depth-anything/
+
+# Download TAESD
+RUN wget -O models/vae_approx/taesd_decoder.pth https://raw.githubusercontent.com/madebyollin/taesd/main/taesd_decoder.pth
+RUN wget -O models/vae_approx/taesd_encoder.pth https://raw.githubusercontent.com/madebyollin/taesd/main/taesd_encoder.pth
 
 # Set comfystream as the default environment
 RUN conda config --set auto_activate_base false
