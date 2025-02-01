@@ -117,6 +117,16 @@ def build_static_trt_engine(
     3) Build a static TensorRT .engine file
     """
 
+    # Check if the engine file already exists
+    if os.path.exists(engine_out_path):
+        print(f"[INFO] Engine file already exists: {engine_out_path}")
+        return
+
+    # Extract the directory from the file path and ensure it exists
+    directory = os.path.dirname(engine_out_path)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
     if verbose:
         print(f"[INFO] Starting build for model: {model_path}")
         print(f"       Output Engine Path: {engine_out_path}")
@@ -176,16 +186,6 @@ def build_static_trt_engine(
     }
     opt_config = dict(min_config)
     max_config = dict(min_config)
-
-    # The tensorrt_diffusion_model build() signature is typically:
-    #   build(onnx_path, engine_path, timing_cache_path, opt_config, min_config, max_config)
-    # If you have a separate 'timing_cache.trt', put it next to this script:
-    timing_cache_path = os.path.join(os.path.dirname(__file__), "timing_cache.trt")
-
-    # Extract the directory from the file path and ensure it exists
-    directory = os.path.dirname(engine_out_path)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
 
     if verbose:
         print(f"[INFO] Building engine -> {engine_out_path}")
