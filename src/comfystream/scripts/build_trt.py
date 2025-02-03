@@ -13,6 +13,7 @@ import argparse
 # Paths path explicitly to use the downloaded comfyUI installation on root
 ROOT_DIR="/"
 COMFYUI_DIR = "/ComfyUI"
+timing_cache_path = "/ComfyUI/output/tensorrt/timing_cache"
 
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
