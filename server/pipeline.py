@@ -51,6 +51,5 @@ class Pipeline:
 
     async def trigger_workflow(self) -> None:
         """Trigger the current workflow without requiring a video input"""
-        # Create a dummy frame of 512x512 size
-        frame = torch.zeros(1, 512, 512, 3)
-        await self.predict(frame)
+        # Run the prompt directly without any input
+        await self.client.run_prompt(self.client.prompt)

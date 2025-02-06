@@ -23,6 +23,14 @@ class ComfyStreamClient:
     def set_prompt(self, prompt: PromptDictInput):
         self.prompt = convert_prompt(prompt)
 
+    async def run_prompt(self, prompt: PromptDictInput):
+        try:
+            await self.comfy_client.queue_prompt(prompt)
+        except Exception as e:
+            logger.error(f"Error queueing prompt: {str(e)}")
+            logger.error(f"Error type: {type(e)}")
+            raise
+
     async def queue_prompt(self, input: torch.Tensor) -> torch.Tensor:
         async with self._lock:
             tensor_cache.inputs.append(input)
